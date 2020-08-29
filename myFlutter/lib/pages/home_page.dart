@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:myFlutter/dao/home_dao.dart';
 import 'package:myFlutter/model/common_model.dart';
+import 'package:myFlutter/model/grid_nav_model.dart';
 import 'package:myFlutter/model/home_model.dart';
 import 'package:myFlutter/widget/grid_nav.dart';
 import 'package:myFlutter/widget/local_nav.dart'; // 轮播图插件
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   double appBarAlpha = 0;
   String resultString = '';
   List<CommonModel> localNavList = [];
+  GridNavModel gridNavModel;
 
   @override
   void initState() {
@@ -55,6 +57,7 @@ class _HomePageState extends State<HomePage> {
       HomeModel model = await HomeDao.fetch();
       setState(() {
         localNavList = model.localNavList;
+        gridNavModel = model.gridNav;
         // resultString = json.encode(model.config); // 将model转化为字符串
       });
       // print('homeDao:' + resultString);
@@ -117,6 +120,10 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                       padding: EdgeInsets.fromLTRB(7, 4, 7, 4),
                       child: LocalNav(localNavList: localNavList)),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
+                    child: GridNav(gridNavModel: gridNavModel),
+                  ),
                   Container(
                     height: 800,
                     child: ListTile(
