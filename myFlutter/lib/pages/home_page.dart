@@ -9,10 +9,12 @@ import 'package:myFlutter/widget/grid_nav.dart';
 import 'package:myFlutter/widget/loading_container.dart';
 import 'package:myFlutter/widget/local_nav.dart';
 import 'package:myFlutter/widget/sales_box.dart';
+import 'package:myFlutter/widget/search_bar.dart';
 import 'package:myFlutter/widget/sub_nav.dart';
 import 'package:myFlutter/widget/webview.dart'; // 轮播图插件
 
 const APPBAR_SCROLL_OFFSET = 100;
+const SEARCH_BAR_DEFAULT_TEXT = '网红打卡地 景点 酒店 美事';
 
 class HomePage extends StatefulWidget {
   @override
@@ -151,18 +153,30 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget get _appBar {
-    return Opacity(
-      opacity: appBarAlpha,
-      child: Container(
-        height: 80,
-        decoration: BoxDecoration(color: Colors.white),
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: Text('首页'),
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+          height: 80.0,
+          decoration: BoxDecoration(
+              color:
+                  Color.fromARGB((appBarAlpha * 255).toInt(), 255, 255, 255)),
+          child: SearchBar(
+            searchBarType: appBarAlpha > 0.2
+                ? SearchBarType.homeLight
+                : SearchBarType.home,
+            inputBoxClick: _jumpToSearch,
+            speakClick: _jumpToSpeak,
+            defaultText: SEARCH_BAR_DEFAULT_TEXT,
+            leftButtonClick: () {},
           ),
         ),
-      ),
+        Container(
+          height: appBarAlpha > 0.2 ? 0.5 : 0,
+          decoration: BoxDecoration(
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 0.5)]),
+        )
+      ],
     );
   }
 
@@ -193,4 +207,8 @@ class _HomePageState extends State<HomePage> {
           pagination: SwiperPagination(),
         ));
   }
+
+  _jumpToSearch() {}
+
+  _jumpToSpeak() {}
 }
