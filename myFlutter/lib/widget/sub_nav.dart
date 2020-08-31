@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myFlutter/model/common_model.dart';
-import 'package:myFlutter/model/grid_nav_model.dart';
 import 'package:myFlutter/widget/webview.dart';
 
 // 继承widget: StatefulWidget或者StatelessWidget写法区别
