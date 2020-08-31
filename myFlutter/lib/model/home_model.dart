@@ -22,6 +22,8 @@ class HomeModel {
       this.salesBox});
 
   factory HomeModel.fromJson(Map<String, dynamic> json) {
+    print(json);
+
     var localNavListJson = json['localNavList'] as List; //转换为list
     List<CommonModel> localNavList = localNavListJson
         .map((i) => CommonModel.fromJson(i))
@@ -42,6 +44,7 @@ class HomeModel {
       bannerList: bannerList,
       localNavList: localNavList,
       gridNav: GridNavModel.fromJson(json['gridNav']),
+      salesBox: SalesBoxModel.fromJson(json['salesBox']),
       subNavList: subNavList,
     );
   }
