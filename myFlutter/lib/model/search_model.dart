@@ -1,8 +1,9 @@
 // 搜索模型
 class SearchModel {
   final List<SearchItem> data;
+  String keyword;
 
-  SearchModel({this.data});
+  SearchModel({this.data, this.keyword});
 
   factory SearchModel.fromJson(Map<String, dynamic> json) {
     var dataJson = json['data'] as List;
