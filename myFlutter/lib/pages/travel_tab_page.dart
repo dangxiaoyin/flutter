@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+// 瀑布流布局组件 0.3.0以下版本滑动有问题
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:myFlutter/dao/travel_dao.dart';
 import 'package:myFlutter/model/travel_model.dart';
 import 'package:myFlutter/widget/loading_container.dart';
+import 'package:myFlutter/widget/webview.dart';
 
 const TRAVEL_URL =
     'https://m.ctrip.com/restapi/soa2/16189/json/searchTripShootListForHomePageV2?_fxpcqlniredt=09031014111431397988&__gw_appid=99999999&__gw_ver=1.0&__gw_from=10650013707&__gw_platform=H5';
@@ -23,6 +25,7 @@ class TravelTabPage extends StatefulWidget {
   _TravelTabPageState createState() => _TravelTabPageState();
 }
 
+// AutomaticKeepAliveClientMixin 避免页面重绘
 class _TravelTabPageState extends State<TravelTabPage>
     with AutomaticKeepAliveClientMixin {
   List<TravelItem> travelItems;
@@ -96,6 +99,7 @@ class _TravelTabPageState extends State<TravelTabPage>
     List<TravelItem> filterItems = [];
     resultList.forEach((item) {
       if (item.article != null) {
+        // 移除article为空的模型
         filterItems.add(item);
       }
     });
@@ -104,6 +108,7 @@ class _TravelTabPageState extends State<TravelTabPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: LoadingContainer(
           isLoading: _loading,
@@ -114,11 +119,12 @@ class _TravelTabPageState extends State<TravelTabPage>
               context: context,
               child: StaggeredGridView.countBuilder(
                 controller: _scrollController,
-                crossAxisCount: 2,
+                crossAxisCount: 2, // 总共显示几列
                 itemCount: travelItems?.length ?? 0,
                 itemBuilder: (BuildContext context, int index) =>
                     _TravelItem(index: index, item: travelItems[index]),
-                staggeredTileBuilder: (int index) => StaggeredTile.fit(1),
+                staggeredTileBuilder: (int index) =>
+                    new StaggeredTile.fit(1), // item占几列
               ),
             ),
           )),
@@ -137,12 +143,13 @@ class _TravelItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (item.article.urls != null && item.article.urls.length > 0) {
-          // NavigatorUtil.push(
-          //     context,
-          //     WebView(
-          //       url: item.article.urls[0].h5Url,
-          //       title: '详情',
-          //     ));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => WebView(
+                        url: item.article.urls[0].h5Url,
+                        title: '详情',
+                      )));
         }
       },
       child: Card(
@@ -174,10 +181,7 @@ class _TravelItem extends StatelessWidget {
   Widget get _itemImage {
     return Stack(
       children: <Widget>[
-        // CachedImage(
-        //   inSizedBox: true,
-        //   imageUrl: item.article.images[0]?.dynamicUrl,
-        // ),
+        Image.network(item.article.images[0]?.dynamicUrl),
         Positioned(
           bottom: 8,
           left: 8,
@@ -197,6 +201,7 @@ class _TravelItem extends StatelessWidget {
                     size: 12,
                   ),
                 ),
+                // 控制组件显示的最大宽度和最大高度
                 LimitedBox(
                   maxWidth: 130,
                   child: Text(
@@ -225,12 +230,13 @@ class _TravelItem extends StatelessWidget {
               PhysicalModel(
                 color: Colors.transparent,
                 clipBehavior: Clip.antiAlias,
+                // 设置圆形半径
                 borderRadius: BorderRadius.circular(12),
-                // child: CachedImage(
-                //   imageUrl: item.article.author?.coverImage?.dynamicUrl,
-                //   width: 24,
-                //   height: 24,
-                // ),
+                child: Image.network(
+                  item.article.author?.coverImage?.dynamicUrl,
+                  width: 24,
+                  height: 24,
+                ),
               ),
               Container(
                 padding: EdgeInsets.all(5),
